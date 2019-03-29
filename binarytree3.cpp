@@ -93,108 +93,7 @@ class BiST{
 				cout<<"Not found"<<endl;return 0;	
 			}
 		}
-		//find min
-		int find_min(int value){
-			//search for a branch
-				Node *current = search1(root,value);
-			//take the min of that branch
-			    Node *min = find_min1(current);
-			    cout<<endl;
-			    return min->data;
-		}
-		Node *find_min1(Node *current){
-			//find min the recursion
-			if(current->left == NULL ){
-				return current;	
-			}
-			else if(current == NULL){
-			    return NULL;
-			}
-			//recursion carried to left
-			else return find_min1(current->left);
-		}
 		
-
-		
-		
-		//NExt class - Friday
-		//int height();
-		void deleteNode(int value){
-			//search deleting nodee
-			Node *current = search1(root,value);
-			if(current == NULL){
-			    return;
-			}
-			else{
-				//replacing the values
-			    if(current->left == NULL){ 
-				    replace_at_parent1(current->right,current);
-			    }
-    			else if(current->right == NULL){ 
-    				replace_at_parent1(current->left,current);
-    			}
-    			else{ 
-    			    Node *temp = find_min1(current->right);
-    			    if(current == root){
-    	                current->data = temp->data;
-    	                replace_at_parent1(NULL,temp);
-    				    delete temp;
-    			    }
-    			    else{
-    				    replace_at_parent1(temp,current);
-    				    temp->parent = current->parent;
-    				    temp->left = current->left;
-    				    delete temp;
-    			    }
-    			}
-			}
-			
-		}
-		
-		void replace_at_parent(int value1,int value2){
-			Node *rep = search1(root,value2);
-			Node *current = search1(root,value1);
-			replace_at_parent1(current,rep);
-		}
-		void replace_at_parent1(Node *current,Node *rep){
-			if(rep == root){
-				root = current;	
-			}
-			else if(current == root){
-				return;
-			}
-			else{
-				if(rep->data > rep->parent->data){
-				    if(current == NULL){
-			            rep->parent->right = NULL;
-			        }
-			        else{
-			            rep->parent->right = current;
-    					if(current->data > current->parent->data){
-    						current->parent->right = NULL;
-    					}
-    					else current->parent->left = NULL;
-    					current->parent = rep->parent;
-			        }
-					
-				}
-				else{
-				    if(current == NULL){
-			            rep->parent->left = NULL;
-			        }
-			        else{
-			     	rep->parent->left = current;
-					if(current->data>current->parent->data){
-						current->parent->right = NULL;
-					}
-					else current->parent->left = NULL;
-					current->parent = rep->parent;       
-			        }
-				
-				}
-			}
-			print2DUtil(root,0);
-		}     
 		void print2DUtil(Node *root, int space){
 			// Base case  
 			if (root == NULL)  
@@ -226,10 +125,11 @@ class BiST{
 			return count2(root);			
 		}
 		int count2(Node *current){
+			//current is null it has to return 0
 			if(current == NULL){
 				return 0;
 			}
-			else{
+			else{	//adding the elements the function reached
 				return count2(current->left) + 1 + count2(current->right);
 			}
 		}
@@ -237,26 +137,49 @@ class BiST{
 			return rangeSearch1(root,k1,k2);
 		}
 		int rangeSearch1(Node*current,int k1,int k2){
+			//if current is NULL
 			if (current==NULL) return 0; 
+			//current data is the highest value
 			if (current->data == k2 && current->data == k1){ 
 				cout<<current->data<<","<<endl;
 				return 1;
-			}	
+			}
+			//current data within the range
 			if (current->data <= k2 && current->data >= k1){ 
+				//print the data
 				cout<<current->data<<",";
+				//count the nodes
 				return 1 + rangeSearch1(current->left, k1, k2) + rangeSearch1(current->right, k1, k2); 
 			} 
+			//is current data is less than k2 and k1
 			else if (current->data < k2){ 
 				return rangeSearch1(current->right, k1, k2); 
 			} 
-			
+			//if current data is greater than k2
 			else {
 				cout<<"\n"<<"The range of the given interval is ";
 				return rangeSearch1(current->left, k1, k2); 
 			}
 			
 		}
-	
+		int height(){
+		    return height1(root);
+		}
+		int height1(Node* current){  
+            if (current == NULL)  
+                return 0;  
+            else
+            {  
+                /* compute the depth of each subtree */
+                int leftheight = height1(current->left);  
+                int rightheight = height1(current->right);  
+              
+                /* use the larger one */
+                if (leftheight > rightheight)  
+                    return(leftheight + 1);  
+                else return(rightheight + 1);  
+            } 
+        }  
 };
 int main(){
 	BiST t1;
